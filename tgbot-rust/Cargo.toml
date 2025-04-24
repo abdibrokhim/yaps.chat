@@ -1,0 +1,17 @@
+[package]
+name = "tgbot-rust"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+actix-web = { version = "4.3.1", features = ["macros"] }
+shuttle-actix-web = "0.53.0"
+shuttle-runtime = "0.53.0"
+tokio = { version = "1.26.0", features = ["rt-multi-thread", "macros"] }
+teloxide = { version = "0.13.0", features = ["macros", "webhooks"] }
+pretty_env_logger = "0.5.0"
+dptree = "0.3.0"
+url = "2.5.0"
+log = "0.4.20"
+serde_json = "1.0.113"
+bytes = "1.5.0"

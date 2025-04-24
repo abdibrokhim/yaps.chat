@@ -1,0 +1,5 @@
+
+/target
+.shuttle*
+Secrets*.toml
+.env
