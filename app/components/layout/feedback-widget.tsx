@@ -28,11 +28,7 @@ const TRANSITION_CONTENT = {
   duration: 0.2,
 }
 
-type FeedbackWidgetProps = {
-  authUserId?: string
-}
-
-export function FeedbackWidget({ authUserId }: FeedbackWidgetProps) {
+export function FeedbackWidget() {
   const [status, setStatus] = useState<
     "idle" | "submitting" | "success" | "error"
   >("idle")

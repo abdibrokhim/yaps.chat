@@ -12,11 +12,10 @@ const TRANSITION_CONTENT = {
 }
 
 type FeedbackFormProps = {
-  authUserId?: string
   onClose: () => void
 }
 
-export function FeedbackForm({ authUserId, onClose }: FeedbackFormProps) {
+export function FeedbackForm({ onClose }: FeedbackFormProps) {
   const [status, setStatus] = useState<
     "idle" | "submitting" | "success" | "error"
   >("idle")
@@ -41,10 +40,8 @@ export function FeedbackForm({ authUserId, onClose }: FeedbackFormProps) {
 
     try {
       // Create a mailto link with the feedback content
-      const subject = encodeURIComponent("Feedback for Zarin Chat")
-      const body = encodeURIComponent(feedback)
-      const userId = authUserId ? encodeURIComponent(`User ID: ${authUserId}`) : "Zarin User"
-      const emailBody = encodeURIComponent(`${feedback}\n\n${userId}`)
+      const subject = encodeURIComponent("Feedback for yaps[dot]chat")
+      const emailBody = encodeURIComponent(`${feedback}`)
       
       // Open the email client
       window.location.href = `mailto:abdibrokhim@gmail.com?subject=${subject}&body=${emailBody}`
