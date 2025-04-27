@@ -90,6 +90,7 @@ export function ChatInput({
   const [pendingAttachment, setPendingAttachment] = useState<File | null>(null);
   const [pendingAttachmentUrl, setPendingAttachmentUrl] = useState<string | null>(null);
   const { startVideoChat, isVideoChatActive } = useVideoChat();
+  const [isUserSpeaking, setIsUserSpeaking] = useState(false);
   
   // Reset pending attachment when files are cleared
   useEffect(() => {
@@ -368,6 +369,48 @@ export function ChatInput({
     });
   };
 
+  // Handle speech transcript from ButtonRecord
+  const handleTranscript = (transcript: string) => {
+    if (!transcript || transcript.trim() === '') return;
+    
+    // Always append new transcript to existing text
+    // Only capitalize if this is the start of a new message
+    let processedTranscript = transcript;
+    
+    if (value === '') {
+      // Capitalize first letter if it's a brand new message
+      processedTranscript = transcript.charAt(0).toUpperCase() + transcript.slice(1);
+    }
+    
+    // Check if we need to add space between existing text and new transcript
+    const needsSpace = value !== '' && !value.endsWith(' ') && !processedTranscript.startsWith(' ');
+    const separator = needsSpace ? ' ' : '';
+    
+    // Always concatenate, never replace
+    onValueChange(value + separator + processedTranscript);
+    
+    // Auto-resize the textarea
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+      textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 200)}px`;
+    }
+    
+    logger.info("ChatInput", "Speech transcript received", { 
+      transcriptLength: transcript.length
+    });
+  };
+
+  // Handle speaking state changes from ButtonRecord
+  const handleSpeakingStateChange = (isSpeaking: boolean) => {
+    setIsUserSpeaking(isSpeaking);
+    
+    if (isSpeaking) {
+      logger.info("ChatInput", "Speech recording started");
+    } else {
+      logger.info("ChatInput", "Speech recording stopped");
+    }
+  };
+
   return (
     <>
       {currentReplyTo !== undefined && setReplyTo && (
@@ -391,9 +434,15 @@ export function ChatInput({
         >
           <FileList files={files} onFileRemove={onFileRemove} />
           <PromptInputTextarea
-            placeholder={connected ? (files.length > 0 ? "Image selected. Click send to share it." : "Type a message...") : "Connect to start chatting..."}
+            placeholder={connected ? (
+              isUserSpeaking 
+                ? "Listening... Speak clearly" 
+                : (files.length > 0 
+                  ? "Image selected. Click send to share it." 
+                  : "Type a message...")
+            ) : "Connect to start chatting..."}
             onKeyDown={handleKeyDown}
-            className="mt-2 ml-2 min-h-[44px] max-h-[150px] text-base leading-[1.3] sm:text-base md:text-base"
+            className={`mt-2 ml-2 min-h-[44px] max-h-[150px] text-base leading-[1.3] sm:text-base md:text-base ${isUserSpeaking ? 'placeholder-red-500' : ''}`}
             disabled={isSubmitting || files.length > 0 || pendingAttachment !== null}
             ref={textareaRef}
           />
@@ -403,7 +452,7 @@ export function ChatInput({
               <div>
                 <ButtonFileUpload
                   onFileUpload={handleFileUploadInternal}
-                  disabled={isSubmitting || !connected || partnerDisconnected || files.length > 0}
+                  disabled={isSubmitting || !connected || partnerDisconnected || files.length > 0 || isUserSpeaking}
                 />
               </div>
               
@@ -414,7 +463,7 @@ export function ChatInput({
                     console.log("Emoji selected in chat input:", emoji);
                     handleEmojiClick(emoji);
                   }}
-                  disabled={isSubmitting && status === "submitted"}
+                  disabled={(isSubmitting && status === "submitted") || isUserSpeaking}
                 />
               </div>
               
@@ -425,7 +474,7 @@ export function ChatInput({
                     console.log("GIF selected in chat input:", gif.id);
                     handleGifSelect(gif);
                   }}
-                  disabled={isSubmitting && status === "submitted"}
+                  disabled={(isSubmitting && status === "submitted") || isUserSpeaking}
                 />
               </div>
             </div>
@@ -434,14 +483,16 @@ export function ChatInput({
               <div>
                 <ButtonVideoChat
                   onStartVideoChat={handleStartVideoChat}
-                  disabled={!connected || partnerDisconnected || isVideoChatActive}
+                  disabled={!connected || partnerDisconnected || isVideoChatActive || isUserSpeaking}
                 />
               </div>
               
               {/* Record Button */}
               <div>
                 <ButtonRecord
-                  isUserSpeaking={false}
+                  isUserSpeaking={isUserSpeaking}
+                  onTranscript={handleTranscript}
+                  onSpeakingStateChange={handleSpeakingStateChange}
                 />
               </div>
               

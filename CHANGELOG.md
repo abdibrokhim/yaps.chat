@@ -2,26 +2,34 @@
 
 > just to make sure i was not sleeping all the time.
 
+27th April, 2025
+
+[2.3.2]
+- bugs fixed.
+- new feature; voice messages.
+
+
 24th April, 2025
 
 [2.3.1]
 - video chat camera fixes.
 
+
 14th April, 2025
 
 [2.3.0]
-- video chats
-- deployed new server-rust
-- deployed new yaps.chat client
+- video chats.
+- deployed new server-rust.
+- deployed new yaps.chat client.
 
 [2.2.6]
 - completely redesigned the message UI/UX.
 - way better and more intuitive folder structure.
 
 [2.2.5]
-- shit, <PopoverTrigger asChild> should be inside <TooltipTrigger asChild>
-- changes and improvements
-- bugs fixed ( but still some bugs are there)
+- shit, <PopoverTrigger asChild> should be inside <TooltipTrigger asChild>.
+- changes and improvements.
+- bugs fixed ( but still some bugs are there).
 
 
 12th April, 2025
