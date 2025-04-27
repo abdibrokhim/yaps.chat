@@ -20,6 +20,7 @@ import { logger } from "@/lib/logger"
 import { UpgradeToProDialog } from "../essentials/upgrade-to-pro"
 import { Stop } from "@phosphor-icons/react"
 import { useVideoChat } from "../video-chat/video-chat-provider"
+import { ButtonRecord } from "./button-record"
 
 // Helper function to read file as ArrayBuffer for sending images
 const readFileAsArrayBuffer = (file: File): Promise<ArrayBuffer> => {
@@ -434,6 +435,13 @@ export function ChatInput({
                 <ButtonVideoChat
                   onStartVideoChat={handleStartVideoChat}
                   disabled={!connected || partnerDisconnected || isVideoChatActive}
+                />
+              </div>
+              
+              {/* Record Button */}
+              <div>
+                <ButtonRecord
+                  isUserSpeaking={false}
                 />
               </div>
               

@@ -20,4 +20,10 @@ export const DAILY_FILE_UPLOAD_LIMIT = 5;
 
 export const NOTIFICATION_AUDIO_PATH = "/audio/yapsnotify.mp3";
 
-export const MAX_FILE_SIZE = 10 * 1024 * 1024 // 10MB
+export const MAX_FILE_SIZE = 2 * 1024 * 1024 // 2 MB
+
+export const MAX_AUDIO_DURATION = 10 * 1024 // 10 seconds
+
+export const MAX_INPUT_TEXT_LENGTH = 200 // 200 characters
+
+export const MAX_VIDEO_CHAT_DURATION = 2 * 60 * 1000 // 2 minutes
